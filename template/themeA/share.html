@@ -1,0 +1,82 @@
+{{>header}}
+
+
+{{^SHOW}}
+<div class="row">
+	<div id="blockResult" class="offset-m3 col m6">
+		<div class="row">
+			<div id="msgError" class="col m12">
+				Vous n'avez pas les droits pour pouvoir accéder à cela
+			</div>
+		</div>
+	</div>
+</div>
+{{/SHOW}}
+
+{{#SHOW}}
+
+<div class="row">
+	<table id="table-share" class="col m6 push-m3">
+		<form id="form-download" action="{{URL_}}downloadCustomArchive/" method="post">
+			{{#LIST}}
+				<tr>
+					<td>
+						<input type="checkbox" name="fileCheckBox[]" class="filled-in" value="{{Name}}" id="ID-{{Name}}" />
+						<label for="ID-{{Name}}"></label>
+					</td>
+					<td>{{DisplayName}}</td>
+					<td>{{dateFR}}</td>
+				</tr>
+			{{/LIST}}
+			<input type="hidden" name="fold" value="{{fold}}"/>
+			<input type="hidden" name="keyUser" value="{{keyUser}}"/>
+			<tr>
+				<td><input type="checkbox" name="selectall" class="filled-in" /></td>
+						<td><input type="submit" class="waves-light btn grey darken-3" name="send" id="button-dl" value="Télécharger" /></td>
+						<td><a data-download="{{DOWNLOAD}}" class="download waves-light btn grey darken-3" id="button-dl">Télécharger l'archive complète</a></td></tr>
+		</form>
+	</table>
+</div>
+	<script>
+	$(document).ready(function(){
+		$('#form-download').on("submit", function(e){
+			e.preventDefault();
+
+			var dataform = $('#form-download').serialize();
+			
+			$.ajax({
+				type: 'POST',
+				url: '{{URL_}}downloadCustomArchive/',
+				data:  dataform,
+				dataType: "html",
+				success : function(da){
+					window.location = da;
+				},
+				error : function(da){
+					console.log(da);
+				}
+			});
+		});
+
+		$(".download").click(function(e){
+			e.preventDefault();
+
+				{{#GET_SEND_EMAIL_ARCHIVE}}
+					$.get("{{GET_SEND_EMAIL_ARCHIVE}}");
+				{{/GET_SEND_EMAIL_ARCHIVE}}
+
+			window.location = $(this).data('download');
+		});
+	});
+	</script>
+
+	<style>
+		input[type="checkbox"], input[type="radio"]{
+			position: relative;
+			opacity: 1;
+		}
+	</style>
+
+{{/SHOW}}
+
+{{>footer}}

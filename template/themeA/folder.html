@@ -1,0 +1,55 @@
+{{>header}}
+<div class="row">
+	<div id="blockResult" class="offset-m3 col m6">
+
+	{{#ERREUR}}
+		<div class="row">
+			<div id="msgError" class="col m12">
+			{{CONTENT}}
+			</div>
+		</div>
+	{{/ERREUR}}
+
+	{{^ERREUR}}
+		<div class="row" id="result">
+			<div class="col m10 push-m1 div-title">
+				{{#UPL}}
+					<h5 class="valign">Vous avez terminé !</h5>
+				{{/UPL}}
+				{{^UPL}}
+					<h5 class="valign">Vous avez terminé !</h5>
+				{{/UPL}}
+			</div>
+		</div>
+
+
+		<div id="bubble" class="row">
+			<div id="msg" class="talk-bubble tri-right round right-in col m9 push-m1">
+				<div class="talktext">
+				  <p  class="col m9 push-m1">
+				
+					L'e-mail de téléchargement a été envoyé avec succès, votre lien sera disponible jusqu'au :<br><span style="font-weight: bold">{{DATE}}</span>
+				
+				</p>
+			  </div>
+			</div>
+			<img id="mascot" class="col m1 push-m1" src="{{URL_}}css/themeA/img/patateVNEW.svg">
+		</div>
+
+		<form class="row">
+			<label id="linkinfo"class="col m10 push-m1" for="url" class="grey-text text-darken-4">Lien de partage de votre dossier :</label>
+			<input id="link" class="input-field orange lighten-4 col m10 push-m1" value="{{URL_ARCHIVE}}" name="url" type="text">
+		</form>
+		<div class="row">
+			<div class="offset-m4 col m6 div-button-next">
+				<a href="{{URL_}}"><input id="button-home" class="waves-effect waves-light btn grey darken-3" type="submit" name="Recommencer" value="Recommencer" /></a>
+			</div>
+		</div>
+
+	{{/ERREUR}}
+
+	</div>
+
+</div>
+
+{{>footer}}

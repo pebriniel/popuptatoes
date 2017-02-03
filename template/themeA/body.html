@@ -1,0 +1,263 @@
+{{>header}}
+ <!-- FORMULAIRE -->
+            <div class="row">
+              <form class="offset-m1 col m3" id ="block1" name="form">
+				 <div class="row">
+				   <div class="input-field col m12">
+					 <input id="mail_exp" type="email" name="emailExp" class="validate">
+					 <label for="mail_exp" class="grey-text text-darken-4">Votre mail</label>
+				   </div>
+				 </div>
+				 <div class="row">
+				   <div class="input-field col m12">
+					 <input id="mail_rec" type="email" name="emailRec" class="validate">
+					 <label for="mail_rec" class="grey-text text-darken-4">Mail de votre destinataire</label>
+				   </div>
+				 </div>
+				 <div class="row">
+				   <div class="input-field col m12">
+					 <input id="subjet" type="text" name="object" class="validate">
+					 <label for="subjet" class="grey-text text-darken-4">Sujet de votre message</label>
+				   </div>
+				 </div>
+				 <div class="row">
+				   <div class="input-field col m12">
+					 <input id="content" type="text" name="message" class="validate">
+					 <label for="content" class="grey-text text-darken-4">Contenu de votre message</label>
+				   </div>
+				 </div>
+
+               <div class="input-field col m12">
+            <select id="select" name="duree">
+               <option value="" disabled selected>Durée de conservation des fichiers</option>
+               <option value="1">1 jour</option>
+               <option value="2">7 jours</option>
+               <option value="3">14 jours</option>
+               <option value="4">30 jours</option>
+             </select>
+             <label for="select"></label>
+              </div>
+              <script>
+                    $(document).ready(function() {
+                    $('select').css("display", "block");
+                      });
+              </script>
+				   <div class="row">
+					 <div class="col m12" id="bloc-button-next">
+					   <input id="button-next" class="waves-effect waves-light btn grey darken-3" type="submit" name="submit" value="Suivant" />
+					 </div>
+				   </div>
+			   </form>
+
+
+        <!-- BLOC UPLOAD -->
+               <div class="row">
+				<article class="offset-m1 col m4">
+					<div>
+						<form method="post" action="{{URL_}}UPLfiles/" enctype="multipart/form-data" name="form2" id="block2">
+						  <div class="file-field input-field">
+							<div class="btn grey darken-3" id="button-upload">
+							  <span>Parcourir</span>
+							  <input type="file" id="files" name="files[]" multiple />
+							</div>
+							<div class="file-path-wrapper">
+							  <input class="file-path validate input-name-file" type="text" name="test" placeholder="Téléchargez un ou plusieurs fichiers" />
+							</div>
+						  </div>
+							<input type="hidden" value="586b7588c414f" id="folder" name="folder"/>
+						</form>
+					</div>
+					<div class="list-file">
+
+					</div>
+					<div class="row btn-send-finish">
+						<div class="offset-m4 col m6" id="button-end-div">
+							<a href="" id="button-end" class="waves-effect waves-light btn grey darken-3 btn-finale">Terminé</a>
+						</div>
+					</div>
+           <div id="disabled"></div>
+				</article>
+
+        <div class="row">
+            <div class="col m2">
+				<div class="row">
+						<div id="msg" class="col m12 talk-bubble talk-buble-home tri-right btm-right">
+							<div class="talktext">
+							  <p  class="col m9 push-m1 size-home">
+								COUCOU !<BR/>VEUILLEZ REMPLIR TOUS LES CHAMPS DU FORMULAIRE POUR GÉNÉRER VOTRE LIEN.
+							</p>
+						  </div>
+						</div>
+				</div>
+				<div class="row">
+					<img class="col m2" id="patate" src="{{URL_}}css/themeA/img/patate-home.svg" />
+				</div>
+			</div>
+        </div>
+
+      </div>
+
+            </div>
+
+<style>
+	.list-file{
+		padding-left: 1em;
+		padding-right: 1em;
+		overflow: auto;
+		height: 220px;
+	}
+	.list-file .remove{
+		margin-right: 1em;
+	}
+	.list-file .item{
+		display: block;
+		position: relative;
+		width: 100%;
+		background-color: rgba(0, 0, 0, 0.1);
+		margin-top: 1em;
+	}
+	.list-file span{
+		right: 1em;
+		position: absolute;
+		padding-top: 0.5em;
+	}
+	.upload{
+		position: relative;
+		height: 35px;
+	}
+	.load{
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		background-color: rgba(39, 169, 48, 0.3);
+		height: 100%;
+	}
+</style>
+
+<script src="js/body.js"></script>
+<script>
+var folder = null;
+	var send = true;
+		/* -- on envoie le lock 1 */
+		$('#button-next').click(function(e){
+			e.preventDefault();
+			if(send){
+				$.post('{{URL_}}uploadAjax/', $('#block1').serialize())
+				.done(function(data){
+					data = JSON.parse(data);
+
+					if(data['STATUT'] == 1){
+						send = false;
+						folder = data['CONTENT'];
+						$('#folder').val(folder);
+						$('#disabled').css("display", "none");
+						$(".btn-finale").attr('href', '{{URL_}}folder/'+folder+'/');
+						$(".div-button-next").css("display", "none");
+					}
+					else{
+						 Materialize.toast(data['CONTENT']);
+					}
+
+				})
+
+				.fail(function(data) {
+					console.log("wtf");
+				});
+			}
+		});
+
+        /* - on envoie le block 2 */
+        $('#files').on('change', function(e){
+      //  $('#block2').on('submit', function(e){
+			e.preventDefault();
+			var $form = $('#block2');
+			var formdata = (window.FormData) ? new FormData($form[0]) : null;
+			var data = (formdata !== null) ? formdata : $form.serialize();
+			
+			var key = makeid();
+			addFileTransfert(key);
+			
+			$.ajax({
+				xhr: function()
+				{
+					var xhr = new window.XMLHttpRequest();
+					//Upload progress
+					xhr.upload.addEventListener("progress", function(evt){
+						$(".input-name-file").val(""); 
+						if (evt.lengthComputable) {
+							var percentComplete = evt.loaded / evt.total;
+							//Do something with upload progress
+							$(".load-"+key).css("width", (percentComplete * 100)+"%");
+						}
+					}, false);
+					//Download progress
+					xhr.addEventListener("progress", function(evt){
+						if (evt.lengthComputable) {
+							var percentComplete = evt.loaded / evt.total;
+							//Do something with download progress
+							console.log(percentComplete);
+						}
+					}, false);
+					return xhr;
+				},
+			  url: '{{URL_}}UPLfiles/',
+			  type: 'POST',
+			  contentType: false, // obligatoire pour de l'upload
+			  processData: false, // obligatoire pour de l'upload
+			  data: data,
+			  success: function (response) {	
+				$(".upload-"+key).remove(); 
+				response = JSON.parse(response);
+				if(response['STATUT'] == 1){
+					if(response['NAMEORIGIN'].length > 0){
+						for(var i = 0; i < response['NAMEORIGIN'].length; i ++){
+							if(response['ERRORFILE'][i] == 1){
+								$('.list-file').append('<div class="item item-'+response['NAMEFILERDG'][i]+'"><div data-id='+response['NAMEFILERDG'][i]+' class="remove waves-effect red darken-1 btn"><i>X</i></div>'+response['NAMEORIGIN'][i]+'</div>');
+							}
+							else{
+								console.log(response['ERRORMESS'][i]+"azerty");
+								 Materialize.toast(response['ERRORMESS'][i]);
+							}
+						}
+					}
+					else{
+						 console.log(response['ERRORMESS']+"dev");
+						 Materialize.toast(response['ERRORMESS']);
+					}
+				}
+				else{
+					 console.log(response['ERRORMESS']+"dev");
+					Materialize.toast(response['CONTENT']);
+				}
+			  }
+			})
+
+		  } );
+
+
+	$('.list-file').on('click', '.remove', function(){
+	var key = $(this).data('id');
+	 $.ajax({
+		type: 'POST',
+		url: '{{URL_}}deleteFileAjax/',
+		data:  'fold='+folder+'&file='+key,
+		dataType: "html",
+		success : function(data){
+			data = JSON.parse(data);
+			if(data['STATUT'] == 1){
+				$('.item-'+key).remove();
+			}
+			else{
+				 Materialize.toast(response['CONTENT']);
+			}
+		},
+		error : function(data){
+			console.log(data);
+		}
+	});
+	});
+</script>
+
+
+{{>footer}}

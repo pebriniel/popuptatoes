@@ -1,0 +1,4 @@
+Différente problèmatique
+
+	j'ai deux variables durées à deux endroits différents, l'idéales seraient que ces variables soient les mêmes
+pour les deux fichiers
